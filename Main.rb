@@ -4,10 +4,6 @@ require 'gosu'
 files = File.join(File.dirname(__FILE__), 'lib', '*.rb')
 Dir.glob(files).each { |f| require f }
 
-#require_relative 'lib/zorder'
-#require_relative 'lib/game_utilities'
-#require_relative 'lib/ship'
-#require_relative 'lib/star'
 
 class GameWindow < Gosu::Window
   def initialize
@@ -39,6 +35,7 @@ class GameWindow < Gosu::Window
     $score = 0
     @stars = []
     @ship.reset
+    @welcome = true
   end
 
   def new_player
@@ -59,6 +56,7 @@ class GameWindow < Gosu::Window
 
     @paused = !@paused
   end
+
 
   def play_sound sound, freq = 1.0, vol = 1.0
     @sounds << sound.play(freq, vol)
@@ -82,6 +80,10 @@ class GameWindow < Gosu::Window
     else
       @bg_music.play(true)
     end
+  end
+
+  def toggle_welcome
+    @welcome = !@welcome
   end
 
   def update
@@ -126,11 +128,12 @@ class GameWindow < Gosu::Window
 
   def draw
     draw_game_ui
+    draw_welcome_screen if @welcome
 
     @bg_img.draw(0, 0, ZOrder::Background)
-    @stars.each { |s| s.draw }
+    @stars.each { |s| s.draw } unless @welcome
 
-    @ship.draw unless @game_over
+    @ship.draw unless @game_over || @welcome
   end
 
   def draw_game_ui
@@ -142,7 +145,7 @@ class GameWindow < Gosu::Window
       ZOrder::UI, 1.0, 1.0, 0xffffff00)
 
     draw_life_counter
-    draw_pause_screen if @paused
+    draw_pause_screen if @paused && !@welcome
     draw_game_over_screen if @game_over
     draw_energy_gauge
   end
@@ -153,6 +156,16 @@ class GameWindow < Gosu::Window
 
     @font.draw(text, (x - w / 2), (y - h / 2), ZOrder::UI,
       1.0, 1.0, 0xffffff00)
+  end
+
+  def draw_welcome_screen
+    draw_text("STARFIGHTER", 310, 240)
+    draw_text("Y - Play", 310, 280)
+    draw_text("P - Pause", 310, 300)
+    draw_text("ESC - Quit", 310, 320)
+    draw_text("Space/Alt/Ctrl - Fire Weapon", 310, 340)
+    draw_text("Shift - Shield", 310, 360)
+    draw_text("M - Toggle Music", 310, 380)
   end
 
   def draw_pause_screen
@@ -208,6 +221,8 @@ class GameWindow < Gosu::Window
       end
     else
       case id
+      when Gosu::KbY
+        toggle_welcome
       when Gosu::KbQ || Gosu::KbEscape
         close
       when Gosu::KbP
