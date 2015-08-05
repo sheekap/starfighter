@@ -1,10 +1,13 @@
 require 'rubygems'
 require 'gosu'
 
-require_relative 'lib/zorder'
-require_relative 'lib/game_utilities'
-require_relative 'lib/ship'
-require_relative 'lib/star'
+files = File.join(File.dirname(__FILE__), 'lib', '*.rb')
+Dir.glob(files).each { |f| require f }
+
+#require_relative 'lib/zorder'
+#require_relative 'lib/game_utilities'
+#require_relative 'lib/ship'
+#require_relative 'lib/star'
 
 class GameWindow < Gosu::Window
   def initialize
