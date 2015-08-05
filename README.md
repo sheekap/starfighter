@@ -1,8 +1,7 @@
 STARFIGHTER
 ===========
 
-This game was adapted from the [Starfighter Ruby/Gosu tutorial](https://github.com/masonhale/Starfighter-Gosu-Tutorial) by [masonhale](https://github.com/masonhale).
-I've made some small changes and updated the code a bit since the tutorial is quite old now. More changes will come in future to make the game more sophisticated.
+This is 2-D battleship style game that was made using Ruby with Gosu. For the moment, the game is quite straighforward but I plan to turn it into more sophisticated, arcade-style project in the future.
 
 Instructions
 -------------
